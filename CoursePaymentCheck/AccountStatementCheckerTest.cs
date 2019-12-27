@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static CoursePaymentCheck.CoursePaymentChecker;
 
 namespace CoursePaymentCheck
 {
-    [TestFixture]
+    [TestClass]
     public class AccountStatementCheckerTest
     {
         private AccountStatementChecker _sut;
@@ -15,7 +15,7 @@ namespace CoursePaymentCheck
         private string _subject;
         private DateTime _startDate;
 
-        [SetUp]
+        [TestInitialize]
         public void Init()
         {
             _sut = new AccountStatementChecker();
@@ -25,7 +25,7 @@ namespace CoursePaymentCheck
             _startDate = new DateTime(2020, 1, 1);
         }
 
-        [Test]
+        [TestMethod]
         public void Test_CheckStatement_EverythingCorrect()
         {
             var accountStatement = new AccountStatement(_startDate, _members[0].LastName, _subject, _amount);
@@ -34,7 +34,7 @@ namespace CoursePaymentCheck
                 Should().Be(AccountStatementState.EverythingCorrect);
         }
 
-        [Test]
+        [TestMethod]
         public void Test_CheckStatement_EverythingCorrectButDate()
         {
             var falseDate = _startDate - TimeSpan.FromDays(1);
@@ -44,7 +44,7 @@ namespace CoursePaymentCheck
                 Should().Be(AccountStatementState.EverythingCorrectButDate);
         }
 
-        [Test]
+        [TestMethod]
         public void Test_CheckStatement_FalseAmount()
         {
             var falseAmount = _amount + 1;
@@ -56,7 +56,7 @@ namespace CoursePaymentCheck
             result.Should().NotBe(AccountStatementState.EverythingCorrectButDate);
         }
 
-        [Test]
+        [TestMethod]
         public void Test_CheckStatement_FalseSubject()
         {
             var falseSubject = "bla";
