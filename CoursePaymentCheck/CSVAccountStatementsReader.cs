@@ -8,10 +8,10 @@ namespace CoursePaymentCheck
     public class CSVAccountStatementsReader : IAcountStatementsReader
     {
         
-        private static readonly string Date = "Buchungstag";
-        private static readonly string Sender = "Beguenstigter/Zahlungspflichtiger";
-        private static readonly string Subject = "Verwendungszweck";
-        private static readonly string Amount = "Betrag";
+        public static readonly string Date = "Buchungstag";
+        public static readonly string Sender = "Beguenstigter/Zahlungspflichtiger";
+        public static readonly string Subject = "Verwendungszweck";
+        public static readonly string Amount = "Betrag";
 
         public IAccountStatementsSource AccountStatementsSource { get; }
 
@@ -20,7 +20,7 @@ namespace CoursePaymentCheck
             AccountStatementsSource = accountStatementsSource;
         }
 
-        public IEnumerable<AccountStatement> GetPositiveAccountStatements()
+        public IList<AccountStatement> GetPositiveAccountStatements()
         {
             var lines = new List<string>(File.ReadAllLines(AccountStatementsSource.ToString()));
             lines = RemoveQuotes(lines);
