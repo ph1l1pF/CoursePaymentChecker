@@ -31,16 +31,17 @@ namespace CoursePaymentCheck
             var accountStatement = new AccountStatement(_startDate, _members[0].LastName, _subject, _amount);
 
             _sut.CheckStatement(accountStatement, _members, _amount, _startDate).
-                Should().Be(AccountStatementState.EverythingFitting);
+                Should().Be(AccountStatementState.EverythingCorrect);
         }
 
         [Test]
         public void Test_CheckStatement_EverythingCorrectButDate()
         {
-            var accountStatement = new AccountStatement(_startDate - TimeSpan.FromDays(1), _members[0].LastName, _subject, _amount);
+            var falseDate = _startDate - TimeSpan.FromDays(1);
+            var accountStatement = new AccountStatement(falseDate, _members[0].LastName, _subject, _amount);
 
             _sut.CheckStatement(accountStatement, _members, _amount, _startDate).
-                Should().Be(AccountStatementState.EverythingButDate);
+                Should().Be(AccountStatementState.EverythingCorrectButDate);
         }
 
         [Test]
@@ -50,9 +51,9 @@ namespace CoursePaymentCheck
             var accountStatement = new AccountStatement(_startDate, _members[0].LastName, _subject, falseAmount);
 
             var result = _sut.CheckStatement(accountStatement, _members, _amount, _startDate);
-            result.Should().NotBe(AccountStatementState.NothingFitting);
-            result.Should().NotBe(AccountStatementState.EverythingFitting);
-            result.Should().NotBe(AccountStatementState.EverythingButDate);
+            result.Should().NotBe(AccountStatementState.NothingCorrect);
+            result.Should().NotBe(AccountStatementState.EverythingCorrect);
+            result.Should().NotBe(AccountStatementState.EverythingCorrectButDate);
         }
 
         [Test]
@@ -62,9 +63,9 @@ namespace CoursePaymentCheck
             var accountStatement = new AccountStatement(_startDate, _members[0].LastName, falseSubject, _amount);
 
             var result = _sut.CheckStatement(accountStatement, _members, _amount, _startDate);
-            result.Should().NotBe(AccountStatementState.NothingFitting);
-            result.Should().NotBe(AccountStatementState.EverythingFitting);
-            result.Should().NotBe(AccountStatementState.EverythingButDate);
+            result.Should().NotBe(AccountStatementState.NothingCorrect);
+            result.Should().NotBe(AccountStatementState.EverythingCorrect);
+            result.Should().NotBe(AccountStatementState.EverythingCorrectButDate);
         }
     }
 }

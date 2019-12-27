@@ -29,14 +29,12 @@ namespace CoursePaymentCheck
 
         public void PrintInformation()
         {
-            var dictionary = GetStatesOfStatements(_acountStatementsReader.GetPositiveAccountStatements());
-            
-            foreach (var (state, statements) in dictionary)
+            foreach (var (state, statements) in GetStatesOfStatements(_acountStatementsReader.GetPositiveAccountStatements()))
             {
                 var text = GetTextForState(state);
                 if(text != null)
                 {
-                    Console.WriteLine("\n\n"+text);
+                    Console.WriteLine($"\n\n{text}");
                     foreach (var statement in statements) Console.WriteLine(statement);
                 }
             }
@@ -61,22 +59,22 @@ namespace CoursePaymentCheck
 
         private string GetTextForState(AccountStatementState state)
         {
-            switch (state)
+            return state switch
             {
-                case AccountStatementState.LastNameFitting: return "Passender Name";
-                case AccountStatementState.SubjectFitting: return "Passender Betreff";
-                case AccountStatementState.NothingFitting: return null;
-                case AccountStatementState.EverythingFitting: return "Alles passt:";
-                case AccountStatementState.EverythingButDate: return "Alles passt außer das Datum";
-                case AccountStatementState.AmountFitting: return "Passender Betrag";
-                default: throw new ArgumentException();
-            }
+                AccountStatementState.LastNameCorrect => "Passender Name:",
+                AccountStatementState.SubjectCorrect => "Passender Betreff:",
+                AccountStatementState.AmountCorrect => "Passender Betrag:",
+                AccountStatementState.NothingCorrect => null,
+                AccountStatementState.EverythingCorrect => "Alles passt:",
+                AccountStatementState.EverythingCorrectButDate => "Alles passt außer das Datum:",
+                _ => throw new ArgumentException(),
+            };
         }
 
         public enum AccountStatementState
         {
-            EverythingFitting=0, EverythingButDate=1, LastNameFitting=2, AmountFitting=3, SubjectFitting=4,
-            NothingFitting=5
+            EverythingCorrect=0, EverythingCorrectButDate=1, LastNameCorrect=2, AmountCorrect=3, SubjectCorrect=4,
+            NothingCorrect=5
         }
 
 

@@ -61,15 +61,13 @@ namespace CoursePaymentCheck
         private IDictionary<string, int> GetIndexesOfHeadlines(string firstLineOfFile)
         {
             var headlines = new List<string>(firstLineOfFile.Split(";"));
-            var headlineToIndex = new Dictionary<string, int>
+            return new Dictionary<string, int>
             {
                 { Date, headlines.IndexOf(Date) },
                 { Sender, headlines.IndexOf(Sender) },
                 { Subject, headlines.IndexOf(Subject) },
                 { Amount, headlines.IndexOf(Amount) }
             };
-
-            return headlineToIndex;
         }
     }
 }

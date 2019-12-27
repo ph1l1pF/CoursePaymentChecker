@@ -28,23 +28,24 @@ namespace CoursePaymentCheck
                      validSubjects.Any(subject => accountStatement.Subject.Contains(
                          subject, StringComparison.OrdinalIgnoreCase));
 
-            var dateFitting = startDate <= accountStatement.DateTime;
+            var dateCorrect = startDate <= accountStatement.DateTime;
 
-            return ComputeState(propToBool, dateFitting);
+            return ComputeState(propToBool, dateCorrect);
         }
 
         private AccountStatementState ComputeState(Dictionary<string, bool> propToBool, bool dateFitting)
         {
-            var state = AccountStatementState.NothingFitting;
-            int numFittingProps = propToBool.Count(pair => pair.Value);
+            AccountStatementState state = AccountStatementState.NothingCorrect;
+            int numCorrectProps = propToBool.Count(pair => pair.Value);
 
-            if (numFittingProps == propToBool.Count && dateFitting) state = AccountStatementState.EverythingFitting;
-            else if (numFittingProps == propToBool.Count && !dateFitting) state = AccountStatementState.EverythingButDate;
-            else if (numFittingProps > 0)
+            if (numCorrectProps == propToBool.Count && dateFitting) state = AccountStatementState.EverythingCorrect;
+            else if (numCorrectProps == propToBool.Count && !dateFitting) state = AccountStatementState.EverythingCorrectButDate;
+            else if (numCorrectProps > 0)
             {
-                if (propToBool["Amount"]) state = AccountStatementState.AmountFitting;
-                if (propToBool["MemberName"]) state = AccountStatementState.LastNameFitting;
-                if (propToBool["Subject"]) state = AccountStatementState.SubjectFitting;
+                // Hier ist es okay, wenn einer dieser Zustände genommen wird
+                if (propToBool["Amount"]) state = AccountStatementState.AmountCorrect;
+                if (propToBool["MemberName"]) state = AccountStatementState.LastNameCorrect;
+                if (propToBool["Subject"]) state = AccountStatementState.SubjectCorrect;
             }
 
             return state;
