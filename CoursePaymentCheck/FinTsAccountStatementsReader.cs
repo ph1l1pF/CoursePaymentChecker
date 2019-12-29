@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text;
 
 namespace CoursePaymentCheck
 {
@@ -15,6 +14,7 @@ namespace CoursePaymentCheck
         private readonly string _httpsEndpoint;
         private readonly string _bankNumber;
         private readonly string _pin;
+        private readonly OS _os;
 
         private static readonly string FileCsvPath = @"C:\Users\phili\Desktop\file1.csv";
         private static readonly string FilePythonPath = @"C:\Users\phili\Desktop\gettransactions.py";
@@ -23,7 +23,7 @@ namespace CoursePaymentCheck
         public static readonly string Subject = "Verwendungszweck";
         public static readonly string Amount = "Betrag";
 
-        public FinTsAccountStatementsReader(string accountNumber, DateTime startDate, DateTime endDate, string httpsEndpoint, string bankNumber, string pin)
+        public FinTsAccountStatementsReader(string accountNumber, DateTime startDate, DateTime endDate, string httpsEndpoint, string bankNumber, string pin, OS os)
         {
             _accountNumber = accountNumber;
             _startDate = startDate;
@@ -31,23 +31,30 @@ namespace CoursePaymentCheck
             _httpsEndpoint = httpsEndpoint;
             _bankNumber = bankNumber;
             _pin = pin;
+            _os = os;
         }
 
         public IList<AccountStatement> GetPositiveAccountStatements()
         {
             File.Delete(FileCsvPath);
+            if (_os == OS.Windows)
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;//Hidden;
+                startInfo.FileName = "cmd.exe";
+                startInfo.Arguments = $@"/C python3 {FilePythonPath} {_bankNumber} {_accountNumber} {_accountNumber} {_pin}" +
+                    $" {_startDate.ToString("yyyy-MM-dd")} {_endDate.ToString("yyyy-MM-dd")} {_httpsEndpoint} {FileCsvPath}";
 
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;//Hidden;
-            startInfo.FileName = "cmd.exe";
-            startInfo.Arguments = $@"/C python3 {FilePythonPath} {_bankNumber} {_accountNumber} {_accountNumber} {_pin}" +
-                $" {_startDate.ToString("yyyy-MM-dd")} {_endDate.ToString("yyyy-MM-dd")} {_httpsEndpoint} {FileCsvPath}";
 
-            
-            process.StartInfo = startInfo;
-            process.Start();
-            process.WaitForExit();
+                process.StartInfo = startInfo;
+                process.Start();
+                process.WaitForExit();
+            }
+            else if(_os == OS.Mac)
+            {
+
+            }
 
             return ReadStatementsFromFile();
         }
@@ -92,5 +99,7 @@ namespace CoursePaymentCheck
                 { Amount, headlines.IndexOf(Amount) }
             };
         }
+
+        public enum OS { Windows, Mac}
     }
 }

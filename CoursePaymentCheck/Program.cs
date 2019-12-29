@@ -14,8 +14,8 @@ namespace CoursePaymentCheck
         public static void Main(string[] args)
         {
             
-            IAccountStatementsReader acountStatementsReader = new FinTsAccountStatementsReader("KontoNummer", new DateTime(2019, 12, 10), new DateTime(2019, 12, 25),
-                "https://banking-wl1.s-fints-pt-wl.de/fints30", "BLZ", "PIJ");
+            IAccountStatementsReader acountStatementsReader = new FinTsAccountStatementsReader("kontonr", new DateTime(2019, 12, 10), new DateTime(2019, 12, 25),
+                "https://banking-wl1.s-fints-pt-wl.de/fints30", "48050161", "pin", FinTsAccountStatementsReader.OS.Windows);
             var accountStatementChecker = new AccountStatementChecker();
 
             var startDate = new DateTime(2019, 12, 1);
