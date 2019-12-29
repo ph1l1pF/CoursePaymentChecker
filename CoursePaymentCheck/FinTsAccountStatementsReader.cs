@@ -37,16 +37,16 @@ namespace CoursePaymentCheck
         public IList<AccountStatement> GetPositiveAccountStatements()
         {
             File.Delete(FileCsvPath);
+            string command = $"python3 {FilePythonPath} {_bankNumber} {_accountNumber} {_accountNumber} {_pin}" +
+                    $" {_startDate.ToString("yyyy-MM-dd")} {_endDate.ToString("yyyy-MM-dd")} {_httpsEndpoint} {FileCsvPath}";
+
             if (_os == OS.Windows)
             {
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
                 System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;//Hidden;
+                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = $@"/C python3 {FilePythonPath} {_bankNumber} {_accountNumber} {_accountNumber} {_pin}" +
-                    $" {_startDate.ToString("yyyy-MM-dd")} {_endDate.ToString("yyyy-MM-dd")} {_httpsEndpoint} {FileCsvPath}";
-
-
+                startInfo.Arguments = $@"/C {command}";
                 process.StartInfo = startInfo;
                 process.Start();
                 process.WaitForExit();
