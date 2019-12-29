@@ -13,13 +13,13 @@ namespace CoursePaymentCheck
 
         public static void Main(string[] args)
         {
-            IAccountStatementsSource accountStatementsSource = new CSVAccountStatementsSource("/Users/philipfrerk/Downloads/20191221-1888056-umsatz.CSV");
-
-            IAcountStatementsReader acountStatementsReader = new CSVAccountStatementsReader(accountStatementsSource);
+            
+            IAccountStatementsReader acountStatementsReader = new FinTsAccountStatementsReader("KontoNummer", new DateTime(2019, 12, 10), new DateTime(2019, 12, 25),
+                "https://banking-wl1.s-fints-pt-wl.de/fints30", "BLZ", "PIJ");
             var accountStatementChecker = new AccountStatementChecker();
 
-            var startDate = new DateTime(2019, 1, 1);
-            var endDate = new DateTime(2020, 1, 1);
+            var startDate = new DateTime(2019, 12, 1);
+            var endDate = new DateTime(2019, 12, 25);
             IEnumerable<CourseMember> members = new List<CourseMember> {
                 new CourseMember("Nora", "Schmitz")
             };
