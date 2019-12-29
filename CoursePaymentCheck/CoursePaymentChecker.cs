@@ -7,14 +7,14 @@ namespace CoursePaymentCheck
 {
     public class CoursePaymentChecker
     {
-        private readonly IAcountStatementsReader _acountStatementsReader;
+        private readonly IAccountStatementsReader _acountStatementsReader;
         private readonly AccountStatementChecker _accountStatementChecker;
         private readonly DateTime _startDate, _endDate;
         private readonly IEnumerable<CourseMember> _members;
         private readonly double _expectedAmount;
 
 
-        public CoursePaymentChecker(IAcountStatementsReader acountStatementsReader, DateTime startDate,
+        public CoursePaymentChecker(IAccountStatementsReader acountStatementsReader, DateTime startDate,
             DateTime endDate, IEnumerable<CourseMember> members, double expectedAmount, AccountStatementChecker accountStatementChecker)
         {
             _acountStatementsReader = acountStatementsReader;

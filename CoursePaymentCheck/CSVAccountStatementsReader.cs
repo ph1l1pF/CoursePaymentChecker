@@ -5,7 +5,7 @@ using System.IO;
 
 namespace CoursePaymentCheck
 {
-    public class CSVAccountStatementsReader : IAcountStatementsReader
+    public class CSVAccountStatementsReader : IAccountStatementsReader
     {
         
         public static readonly string Date = "Buchungstag";

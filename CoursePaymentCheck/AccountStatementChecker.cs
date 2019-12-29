@@ -28,7 +28,7 @@ namespace CoursePaymentCheck
                      validSubjects.Any(subject => accountStatement.Subject.Contains(
                          subject, StringComparison.OrdinalIgnoreCase));
 
-            var dateCorrect = startDate <= accountStatement.DateTime;
+            var dateCorrect = startDate <= accountStatement.Date;
 
             return ComputeState(propToBool, dateCorrect);
         }

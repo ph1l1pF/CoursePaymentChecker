@@ -47,7 +47,7 @@ namespace CoursePaymentCheck
 
             var actualStatement = resultStatements[0];
 
-            actualStatement.DateTime.Should().Be(new DateTime(2019, 1, 12));
+            actualStatement.Date.Should().Be(new DateTime(2019, 1, 12));
             actualStatement.SenderOrReceiver.Should().Be(_sender);
             actualStatement.Subject.Should().Be(_subject);
             actualStatement.Amount.Should().Be(100.02);

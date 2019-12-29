@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CoursePaymentCheck
 {
-    public interface IAcountStatementsReader
+    public interface IAccountStatementsReader
     {
         public IAccountStatementsSource AccountStatementsSource { get; }
         public IList<AccountStatement> GetPositiveAccountStatements();

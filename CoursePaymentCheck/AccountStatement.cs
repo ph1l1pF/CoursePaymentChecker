@@ -3,7 +3,7 @@ namespace CoursePaymentCheck
 {
     public class AccountStatement
     {
-        public DateTime DateTime { get; }
+        public DateTime Date { get; }
         public string SenderOrReceiver { get; }
         public string Subject { get; }
         public double Amount { get; }
@@ -12,7 +12,7 @@ namespace CoursePaymentCheck
 
         public AccountStatement(DateTime dateTime, string senderOrReceiver, string subject, double amount)
         {
-            DateTime = dateTime;
+            Date = dateTime;
             SenderOrReceiver = senderOrReceiver;
             Subject = subject;
             Amount = amount;
@@ -20,7 +20,7 @@ namespace CoursePaymentCheck
 
         public override string ToString()
         {
-            return $"{DateTime.ToShortDateString()}, \"{SenderOrReceiver.Trim()}\", \"{Subject.Trim()}\", {Amount} EUR";
+            return $"{Date.ToString("dd.MM.yyyy")}, \"{SenderOrReceiver.Trim()}\", \"{Subject.Trim()}\", {Amount} EUR";
         }
 
     }
