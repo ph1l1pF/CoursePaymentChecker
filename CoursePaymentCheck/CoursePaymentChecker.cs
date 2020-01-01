@@ -29,14 +29,21 @@ namespace CoursePaymentCheck
 
         public void PrintInformation()
         {
-            foreach (var (state, statements) in GetStatesOfStatements(_acountStatementsReader.GetPositiveAccountStatements()))
+            try
             {
-                var text = GetTextForState(state);
-                if(text != null)
+                foreach (var (state, statements) in GetStatesOfStatements(_acountStatementsReader.GetPositiveAccountStatements()))
                 {
-                    Console.WriteLine($"\n\n{text}");
-                    foreach (var statement in statements) Console.WriteLine(statement);
+                    var text = GetTextForState(state);
+                    if (text != null)
+                    {
+                        Console.WriteLine($"\n\n{text}");
+                        foreach (var statement in statements) Console.WriteLine(statement);
+                    }
                 }
+            }
+            catch(TransactionReadException e)
+            {
+                Console.WriteLine(e.Message);
             }
 
         }

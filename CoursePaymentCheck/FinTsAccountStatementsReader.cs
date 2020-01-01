@@ -51,6 +51,7 @@ namespace CoursePaymentCheck
         public IList<AccountStatement> GetPositiveAccountStatements()
         {
             File.Delete(_fileCsvPath);
+
             string command = $"python3 {_filePythonPath} {_bankNumber} {_accountNumber} {_accountNumber} {_pin}" +
                     $" {_startDate.ToString("yyyy-MM-dd")} {_endDate.ToString("yyyy-MM-dd")} {_httpsEndpoint} {_fileCsvPath}";
             Process process = new Process();
@@ -79,8 +80,23 @@ namespace CoursePaymentCheck
 
         private IList<AccountStatement> ReadStatementsFromFile()
         {
-            var lines = new List<string>(File.ReadAllLines(_fileCsvPath));
-            
+            List<string> lines;
+            try
+            {
+                lines = new List<string>(File.ReadAllLines(_fileCsvPath));
+            }
+            catch(FileNotFoundException)
+            {
+                throw new TransactionReadException($"Fehler beim Lesen der Transaktionen: Es konnten keine Transaktionen geladen werden.");
+            }
+            catch(Exception e)
+            {
+                throw new TransactionReadException($"Fehler beim Lesen der Transaktionen: {e.Message}");
+            }
+
+            if(lines.Count == 0) throw new TransactionReadException($"Fehler beim Lesen der Transaktionen:" +
+                $" Es befinden sich 0 Transaktionen in der Antwort.");
+
             var headLineToIndex = GetIndexesOfHeadlines(lines[0]);
             lines.RemoveAt(0);
             var positiveAccountStatements = new List<AccountStatement>();
