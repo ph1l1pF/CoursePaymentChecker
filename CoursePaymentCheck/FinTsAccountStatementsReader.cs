@@ -9,16 +9,15 @@ namespace CoursePaymentCheck
     class FinTsAccountStatementsReader : IAccountStatementsReader
     {
      
-
         private readonly string _accountNumber;
         private readonly DateTime _startDate, _endDate;
         private readonly string _httpsEndpoint;
         private readonly string _bankNumber;
         private readonly string _pin;
         private readonly OS _os;
+        private readonly string _fileCsvPath;
+        private readonly string _filePythonPath;
 
-        private static readonly string FileCsvPath = @"/Users/philipfrerk/file1.csv";
-        private static readonly string FilePythonPath = @"/Users/philipfrerk/gettransactions.py";
         public static readonly string Date = "Buchungstag";
         public static readonly string Sender = "Beguenstigter/Zahlungspflichtiger";
         public static readonly string Subject = "Verwendungszweck";
@@ -26,7 +25,8 @@ namespace CoursePaymentCheck
 
         public IAccountStatementsSource AccountStatementsSource => throw new NotImplementedException();
 
-        public FinTsAccountStatementsReader(string accountNumber, DateTime startDate, DateTime endDate, string httpsEndpoint, string bankNumber, string pin, OS os)
+        public FinTsAccountStatementsReader(string accountNumber, DateTime startDate, DateTime endDate,
+            string httpsEndpoint, string bankNumber, string pin, OS os)
         {
             _accountNumber = accountNumber;
             _startDate = startDate;
@@ -35,15 +35,24 @@ namespace CoursePaymentCheck
             _bankNumber = bankNumber;
             _pin = pin;
             _os = os;
+
+            _filePythonPath = Path.Combine(GetPythonDirectory(), "gettransactions.py");
+            _fileCsvPath = Path.Combine(GetPythonDirectory(), "file1.csv"); 
         }
 
-
+        private static string GetPythonDirectory()
+        {
+            var workingDirectory = Directory.GetParent(Directory.GetCurrentDirectory());
+            workingDirectory = Directory.GetParent(workingDirectory.FullName);
+            workingDirectory = Directory.GetParent(workingDirectory.FullName);
+            return Path.Combine(workingDirectory.FullName, "Python");
+        }
 
         public IList<AccountStatement> GetPositiveAccountStatements()
         {
-            File.Delete(FileCsvPath);
-            string command = $"python3 {FilePythonPath} {_bankNumber} {_accountNumber} {_accountNumber} {_pin}" +
-                    $" {_startDate.ToString("yyyy-MM-dd")} {_endDate.ToString("yyyy-MM-dd")} {_httpsEndpoint} {FileCsvPath}";
+            File.Delete(_fileCsvPath);
+            string command = $"python3 {_filePythonPath} {_bankNumber} {_accountNumber} {_accountNumber} {_pin}" +
+                    $" {_startDate.ToString("yyyy-MM-dd")} {_endDate.ToString("yyyy-MM-dd")} {_httpsEndpoint} {_fileCsvPath}";
             Process process = new Process();
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.StartInfo.UseShellExecute = false;
@@ -70,7 +79,7 @@ namespace CoursePaymentCheck
 
         private IList<AccountStatement> ReadStatementsFromFile()
         {
-            var lines = new List<string>(File.ReadAllLines(FileCsvPath));
+            var lines = new List<string>(File.ReadAllLines(_fileCsvPath));
             
             var headLineToIndex = GetIndexesOfHeadlines(lines[0]);
             lines.RemoveAt(0);
