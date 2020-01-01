@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 
@@ -16,8 +17,8 @@ namespace CoursePaymentCheck
         private readonly string _pin;
         private readonly OS _os;
 
-        private static readonly string FileCsvPath = @"C:\Users\phili\Desktop\file1.csv";
-        private static readonly string FilePythonPath = @"C:\Users\phili\Desktop\gettransactions.py";
+        private static readonly string FileCsvPath = @"/Users/philipfrerk/file1.csv";
+        private static readonly string FilePythonPath = @"/Users/philipfrerk/gettransactions.py";
         public static readonly string Date = "Buchungstag";
         public static readonly string Sender = "Beguenstigter/Zahlungspflichtiger";
         public static readonly string Subject = "Verwendungszweck";
@@ -39,22 +40,26 @@ namespace CoursePaymentCheck
             File.Delete(FileCsvPath);
             string command = $"python3 {FilePythonPath} {_bankNumber} {_accountNumber} {_accountNumber} {_pin}" +
                     $" {_startDate.ToString("yyyy-MM-dd")} {_endDate.ToString("yyyy-MM-dd")} {_httpsEndpoint} {FileCsvPath}";
+            Process process = new Process();
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+
 
             if (_os == OS.Windows)
             {
-                System.Diagnostics.Process process = new System.Diagnostics.Process();
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                startInfo.FileName = "cmd.exe";
-                startInfo.Arguments = $@"/C {command}";
-                process.StartInfo = startInfo;
-                process.Start();
-                process.WaitForExit();
+                process.StartInfo.FileName = "cmd.exe";
+                process.StartInfo.Arguments = $@"/C {command}";
             }
             else if(_os == OS.Mac)
             {
-
+                process.StartInfo.FileName = "/bin/bash";
+                process.StartInfo.Arguments = "-c \" " + command + " \"";
             }
+
+
+            process.Start();
+            process.WaitForExit();
 
             return ReadStatementsFromFile();
         }
