@@ -87,15 +87,15 @@ namespace CoursePaymentCheck
             }
             catch(FileNotFoundException)
             {
-                throw new TransactionReadException($"Fehler beim Lesen der Transaktionen: Es konnten keine Transaktionen geladen werden.");
+                throw new TransactionReadException("Fehler beim Lesen der Transaktionen: Es konnten keine Transaktionen geladen werden.");
             }
             catch(Exception e)
             {
                 throw new TransactionReadException($"Fehler beim Lesen der Transaktionen: {e.Message}");
             }
 
-            if(lines.Count == 0) throw new TransactionReadException($"Fehler beim Lesen der Transaktionen:" +
-                $" Es befinden sich 0 Transaktionen in der Antwort.");
+            if (lines.Count == 0) throw new TransactionReadException("Problem: Die Bank hat eine Antwort gesendet, " +
+                 "aber es befinden sich keine Transaktionen in der Antwort.");
 
             var headLineToIndex = GetIndexesOfHeadlines(lines[0]);
             lines.RemoveAt(0);
