@@ -42,7 +42,7 @@ namespace CoursePaymentCheck
             else if (numCorrectProps == propToBool.Count && !dateFitting) state = AccountStatementState.EverythingCorrectButDate;
             else if (numCorrectProps > 0)
             {
-                // Hier ist es okay, wenn einer dieser Zustände genommen wird
+                // when multiple properties are correct, the state is overridden, which is acceptable.
                 if (propToBool["Amount"]) state = AccountStatementState.AmountCorrect;
                 if (propToBool["MemberName"]) state = AccountStatementState.LastNameCorrect;
                 if (propToBool["Subject"]) state = AccountStatementState.SubjectCorrect;

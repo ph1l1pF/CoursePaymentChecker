@@ -8,7 +8,7 @@ namespace CoursePaymentCheck
 {
     class FinTsAccountStatementsReader : IAccountStatementsReader
     {
-        public IAccountStatementsSource AccountStatementsSource => throw new NotImplementedException();
+     
 
         private readonly string _accountNumber;
         private readonly DateTime _startDate, _endDate;
@@ -24,6 +24,8 @@ namespace CoursePaymentCheck
         public static readonly string Subject = "Verwendungszweck";
         public static readonly string Amount = "Betrag";
 
+        public IAccountStatementsSource AccountStatementsSource => throw new NotImplementedException();
+
         public FinTsAccountStatementsReader(string accountNumber, DateTime startDate, DateTime endDate, string httpsEndpoint, string bankNumber, string pin, OS os)
         {
             _accountNumber = accountNumber;
@@ -34,6 +36,8 @@ namespace CoursePaymentCheck
             _pin = pin;
             _os = os;
         }
+
+
 
         public IList<AccountStatement> GetPositiveAccountStatements()
         {
