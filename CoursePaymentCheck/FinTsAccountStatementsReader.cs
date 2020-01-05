@@ -23,7 +23,7 @@ namespace CoursePaymentCheck
         public static readonly string Subject = "Verwendungszweck";
         public static readonly string Amount = "Betrag";
 
-        public IAccountStatementsSource AccountStatementsSource => throw new NotImplementedException();
+      
 
         public FinTsAccountStatementsReader(string accountNumber, DateTime startDate, DateTime endDate,
             string httpsEndpoint, string bankNumber, string pin, OS os)
@@ -43,13 +43,19 @@ namespace CoursePaymentCheck
         private static string GetPythonDirectory()
         {
             var workingDirectory = Directory.GetParent(Directory.GetCurrentDirectory());
+            Console.WriteLine("wd: " + workingDirectory.FullName);
             workingDirectory = Directory.GetParent(workingDirectory.FullName);
             workingDirectory = Directory.GetParent(workingDirectory.FullName);
+
             return Path.Combine(workingDirectory.FullName, "Python");
         }
 
         public IList<AccountStatement> GetPositiveAccountStatements()
         {
+
+            if (DateTime.Now - _startDate > TimeSpan.FromDays(90))
+                throw new TransactionReadException("Fehler: Das gewünschte Startdatum liegt mehr als 90 Tage zurück.");
+
             File.Delete(_fileCsvPath);
 
             string command = $"python3 {_filePythonPath} {_bankNumber} {_accountNumber} {_accountNumber} {_pin}" +

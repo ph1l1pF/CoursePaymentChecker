@@ -5,7 +5,6 @@ namespace CoursePaymentCheck
 {
     public interface IAccountStatementsReader
     {
-        public IAccountStatementsSource AccountStatementsSource { get; }
         public IList<AccountStatement> GetPositiveAccountStatements();
     }
 }

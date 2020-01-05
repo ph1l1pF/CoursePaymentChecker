@@ -24,9 +24,7 @@ namespace CoursePaymentCheck
         [TestInitialize]
         public void Init()
         {
-            var accountStatementsSource =  Substitute.For<IAccountStatementsSource>();
-            accountStatementsSource.ToString().Returns(_pathOfCsvFile);
-            _sut = new CSVAccountStatementsReader(accountStatementsSource);
+            _sut = new CSVAccountStatementsReader(_pathOfCsvFile);
             File.AppendAllText(_pathOfCsvFile, _firstLineOfFile);
         }
 

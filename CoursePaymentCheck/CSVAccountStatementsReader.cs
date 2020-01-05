@@ -13,16 +13,17 @@ namespace CoursePaymentCheck
         public static readonly string Subject = "Verwendungszweck";
         public static readonly string Amount = "Betrag";
 
-        public IAccountStatementsSource AccountStatementsSource { get; }
+        private readonly string _accountStatementSource;
+        
 
-        public CSVAccountStatementsReader(IAccountStatementsSource accountStatementsSource)
+        public CSVAccountStatementsReader(string accountStatementsSource)
         {
-            AccountStatementsSource = accountStatementsSource;
+            _accountStatementSource = accountStatementsSource;
         }
 
         public IList<AccountStatement> GetPositiveAccountStatements()
         {
-            var lines = new List<string>(File.ReadAllLines(AccountStatementsSource.ToString()));
+            var lines = new List<string>(File.ReadAllLines(_accountStatementSource));
             lines = RemoveQuotes(lines);
             var headLineToIndex = GetIndexesOfHeadlines(lines[0]);
             lines.RemoveAt(0);
